@@ -49,8 +49,9 @@ export default {
     }
 
     // 4) El token tiene que estar configurado como secret en Cloudflare
-    if (!env.MONDAY_TOKEN) {
-      return json({ error: "MONDAY_TOKEN no configurado en el Worker." }, 500, origin);
+    //    (el nombre del secret en Cloudflare es token_monday_riggs)
+    if (!env.token_monday_riggs) {
+      return json({ error: "token_monday_riggs no configurado en el Worker." }, 500, origin);
     }
 
     // 5) Tomamos el body (la consulta GraphQL) tal cual lo manda el frontend
@@ -67,7 +68,7 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": env.MONDAY_TOKEN,
+          "Authorization": env.token_monday_riggs,
           "API-Version": "2024-10",
         },
         body: JSON.stringify(payload),
