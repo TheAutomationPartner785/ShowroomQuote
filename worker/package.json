@@ -1,0 +1,15 @@
+{
+  "name": "showroomquote-monday-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Worker que hace de proxy seguro hacia la API de Monday.com",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "login": "wrangler login",
+    "secret": "wrangler secret put MONDAY_TOKEN"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

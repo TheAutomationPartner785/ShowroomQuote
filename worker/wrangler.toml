@@ -1,0 +1,7 @@
+name = "showroomquote-monday-proxy"
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+
+# El token NO va acá. Se carga como secret con:
+#   npx wrangler secret put MONDAY_TOKEN
+# Queda encriptado dentro de Cloudflare, nunca en git.
