@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { Menu } from 'lucide-react';
+import { User } from 'lucide-react';
 import { LeadsEndCustomersBoard } from '@api/BoardSDK.js';
 
 const leadsBoard = new LeadsEndCustomersBoard();
@@ -38,30 +38,63 @@ const Header = () => {
 
   return (
     <Box
-      h="64px"
+      h={{ base: '56px', md: '64px' }}
       bg="white"
       borderBottom="1px solid"
       borderColor="var(--color-border)"
-      px="24px"
+      px={{ base: '16px', md: '24px' }}
+      position="sticky"
+      top="0"
+      zIndex="20"
     >
-      <Flex h="full" align="center" justify="space-between">
-        {/* Left: Hamburger + Title */}
-        <Flex align="center" gap="16px">
-          <Menu size={24} color="var(--color-text-primary)" />
-          <Text
-            fontSize="24px"
-            fontWeight="700"
-            color="var(--color-text-primary)"
-            letterSpacing="-0.02em"
-          >
-            Showroom Quote Pro
-          </Text>
-        </Flex>
-
-        {/* Right: Salesperson */}
-        <Text fontSize="16px" color="var(--color-text-secondary)">
-          Salesperson: <Text as="span" fontWeight="600" color="var(--color-text-primary)">{userName}</Text>
+      <Flex h="full" align="center" justify="space-between" gap="12px">
+        {/* Left: Title */}
+        <Text
+          fontSize={{ base: '18px', md: '24px' }}
+          fontWeight="700"
+          color="var(--color-text-primary)"
+          letterSpacing="-0.02em"
+          whiteSpace="nowrap"
+        >
+          Showroom Quote Pro
         </Text>
+
+        {/* Right: Salesperson identity */}
+        <Flex align="center" gap="10px" minW="0">
+          <Flex
+            w={{ base: '32px', md: '38px' }}
+            h={{ base: '32px', md: '38px' }}
+            borderRadius="full"
+            bg="var(--color-primary-muted)"
+            color="var(--color-primary)"
+            align="center"
+            justify="center"
+            flexShrink="0"
+          >
+            <User size={18} />
+          </Flex>
+          <Box minW="0" lineHeight="1.2">
+            <Text
+              fontSize="11px"
+              color="var(--color-text-secondary)"
+              textTransform="uppercase"
+              letterSpacing="0.04em"
+              display={{ base: 'none', sm: 'block' }}
+            >
+              Salesperson
+            </Text>
+            <Text
+              fontSize={{ base: '13px', md: '15px' }}
+              fontWeight="600"
+              color="var(--color-text-primary)"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+            >
+              {userName}
+            </Text>
+          </Box>
+        </Flex>
       </Flex>
     </Box>
   );

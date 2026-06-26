@@ -71,13 +71,13 @@ const Step1 = ({ selectedLead, setSelectedLead, onNext }) => {
   };
 
   return (
-    <Box px="24px" pb="24px">
+    <Box px={{ base: '16px', md: '24px' }} pb="24px">
       <VStack align="start" gap="8px" mb="24px">
-        <Heading fontSize="32px" fontWeight="700" color="var(--color-text-primary)">Step 1: Customer Identification</Heading>
-        <Text fontSize="16px" color="var(--color-text-secondary)">Please select an existing lead or create a new one to begin.</Text>
+        <Heading fontSize={{ base: '24px', md: '32px' }} fontWeight="700" color="var(--color-text-primary)">Step 1: Customer Identification</Heading>
+        <Text fontSize={{ base: '14px', md: '16px' }} color="var(--color-text-secondary)">Please select an existing lead or create a new one to begin.</Text>
       </VStack>
 
-      <Grid templateColumns="60% 40%" gap="24px">
+      <Grid templateColumns={{ base: '1fr', md: '60% 40%' }} gap={{ base: '16px', md: '24px' }}>
         <VStack align="stretch" gap="16px">
           <Box position="relative">
             <Search size={20} color="var(--color-text-secondary)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
@@ -103,7 +103,8 @@ const Step1 = ({ selectedLead, setSelectedLead, onNext }) => {
               <Button size="sm" mt="2" onClick={retry}>Retry</Button>
             </Alert.Root>
           )}
-          <Box border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden">
+          <Box overflowX="auto">
+          <Box minW={{ base: '520px', md: '0' }} border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden">
             <Grid templateColumns="30% 25% 20% 25%" h="48px" bg="var(--color-bg-surface)" borderBottom="1px solid var(--color-border)" px="16px" alignItems="center">
               {['Name', 'Showroom Visit Date', 'Status', 'Action'].map(h => <Text key={h} fontSize="14px" fontWeight="600" color="var(--color-text-secondary)">{h}</Text>)}
             </Grid>
@@ -130,6 +131,7 @@ const Step1 = ({ selectedLead, setSelectedLead, onNext }) => {
                 ))}
               </>
             )}
+          </Box>
           </Box>
           {!loading && leads.length > 0 && (
             <Box display="flex" justifyContent="space-between" alignItems="center" mt="4" px="2">

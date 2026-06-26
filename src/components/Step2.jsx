@@ -60,15 +60,15 @@ const Step2 = ({ selectedLeadId, cart, setCart, onPrevious, onNext }) => {
   }, { subtotal: 0, dealValue: 0 });
 
   return (
-    <Box px="24px" pb="24px">
+    <Box px={{ base: '16px', md: '24px' }} pb="24px">
       <VStack align="start" gap="8px" mb="24px">
-        <Heading fontSize="32px" fontWeight="700" color="var(--color-text-primary)">Step 2: Build Your Quote</Heading>
-        <Text fontSize="16px" color="var(--color-text-secondary)">Browse the catalog and add items to the customer's selection.</Text>
+        <Heading fontSize={{ base: '24px', md: '32px' }} fontWeight="700" color="var(--color-text-primary)">Step 2: Build Your Quote</Heading>
+        <Text fontSize={{ base: '14px', md: '16px' }} color="var(--color-text-secondary)">Browse the catalog and add items to the customer's selection.</Text>
       </VStack>
 
       {productsError && <Alert.Root colorPalette="red" mb="16px"><Alert.Title>Error</Alert.Title><Alert.Description>{productsError}</Alert.Description></Alert.Root>}
 
-      <Grid templateColumns={{ base: "1fr", md: "55% 45%", lg: "60% 40%" }} gap="24px">
+      <Grid templateColumns={{ base: "1fr", lg: "60% 40%" }} gap={{ base: "16px", md: "24px" }}>
         <VStack align="stretch" gap="24px">
           <ProductCatalogTable
             products={products}

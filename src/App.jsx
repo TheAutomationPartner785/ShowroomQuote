@@ -58,7 +58,7 @@ function App() {
   };
 
   return (
-    <Box minH="100vh" bg="white" fontFamily="Inter, system-ui, sans-serif" pb="72px">
+    <Box minH="100vh" bg="white" fontFamily="Inter, system-ui, sans-serif" pb={{ base: '64px', md: '72px' }}>
       <Header />
       <StepIndicator steps={STEPS} currentStep={currentStep} />
 

@@ -22,7 +22,8 @@ const SubitemsTable = ({ cart, onUpdateQty, onToggleInclude, onRemove }) => {
     <VStack align="stretch" gap="12px">
       <Text fontSize="14px" fontWeight="600" color="var(--color-text-secondary)">CURRENT SELECTION (QUOTE ITEMS)</Text>
 
-      <VStack align="stretch" gap="0" border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden" bg="white">
+      <Box overflowX="auto">
+      <VStack align="stretch" gap="0" minW={{ base: '560px', lg: '0' }} border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden" bg="white">
         <Grid templateColumns="25% 12% 18% 18% 18% 9%" h="48px" bg="var(--color-bg-surface)" borderBottom="1px solid var(--color-border)" px="16px" alignItems="center">
           {['Product', 'Qty', 'Unit Price', 'Total', 'Include?', ''].map(h => <Text key={h} fontSize="14px" fontWeight="600" color="var(--color-text-secondary)">{h}</Text>)}
         </Grid>
@@ -50,6 +51,7 @@ const SubitemsTable = ({ cart, onUpdateQty, onToggleInclude, onRemove }) => {
           );
         })}
       </VStack>
+      </Box>
 
       <Dialog.Root open={!!deleteTarget} onOpenChange={(e) => !e.open && setDeleteTarget(null)}>
         <Portal>

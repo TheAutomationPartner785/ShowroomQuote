@@ -59,13 +59,13 @@ const Step3 = ({ selectedLeadId, cart, onPrevious, onNext }) => {
   const dealerName = leadData?.referOutDealer?.linkedItems?.[0]?.name || '—';
 
   return (
-    <Box px="24px" pb="24px">
+    <Box px={{ base: '16px', md: '24px' }} pb="24px">
       <VStack align="start" gap="8px" mb="24px">
-        <Heading fontSize="32px" fontWeight="700" color="var(--color-text-primary)">Step 3: Final Review</Heading>
-        <Text fontSize="16px" color="var(--color-text-secondary)">Verify the lead information and product list with the customer.</Text>
+        <Heading fontSize={{ base: '24px', md: '32px' }} fontWeight="700" color="var(--color-text-primary)">Step 3: Final Review</Heading>
+        <Text fontSize={{ base: '14px', md: '16px' }} color="var(--color-text-secondary)">Verify the lead information and product list with the customer.</Text>
       </VStack>
 
-      <Grid templateColumns="40% 60%" gap="24px">
+      <Grid templateColumns={{ base: '1fr', md: '40% 60%' }} gap={{ base: '16px', md: '24px' }}>
         <VStack align="stretch" gap="16px">
           <HStack justify="space-between">
             <Text fontSize="16px" fontWeight="700" color="var(--color-text-primary)">1. Customer &amp; Lead Details</Text>
@@ -86,7 +86,8 @@ const Step3 = ({ selectedLeadId, cart, onPrevious, onNext }) => {
 
         <VStack align="stretch" gap="16px">
           <Text fontSize="16px" fontWeight="700" color="var(--color-text-primary)">2. Product Selection Summary</Text>
-          <Box bg="white" border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden">
+          <Box overflowX="auto">
+          <Box minW={{ base: '560px', md: '0' }} bg="white" border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden">
             <Grid templateColumns="35% 12% 18% 18% 17%" h="48px" bg="var(--color-bg-surface)" borderBottom="1px solid var(--color-border)" px="16px" alignItems="center">
               {['Product', 'Qty', 'Unit Price', 'Total', 'Deal Value'].map(h => <Text key={h} fontSize="14px" fontWeight="600" color="var(--color-text-secondary)">{h}</Text>)}
             </Grid>
@@ -99,6 +100,7 @@ const Step3 = ({ selectedLeadId, cart, onPrevious, onNext }) => {
                 <Text fontSize="14px" fontWeight="600" color={item.include ? '#166534' : '#6B7280'}>{item.include ? 'Included' : 'Excluded'}</Text>
               </Grid>
             ))}
+          </Box>
           </Box>
 
           <Box bg="var(--color-bg-subtle)" border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" p="20px">

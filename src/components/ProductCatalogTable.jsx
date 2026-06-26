@@ -407,7 +407,8 @@ const ProductCatalogTable = ({
         </Center>
       ) : (
         <>
-          <VStack align="stretch" gap="0" border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden" bg="white">
+          <Box overflowX="auto">
+          <VStack align="stretch" gap="0" minW={{ base: '600px', lg: '0' }} border="1px solid var(--color-border)" borderRadius="var(--radius-lg)" overflow="hidden" bg="white">
             <Grid templateColumns="25% 20% 12% 15% 15% 13%" h="48px" bg="var(--color-bg-surface)" borderBottom="1px solid var(--color-border)" px="16px" alignItems="center">
               <Text fontSize="14px" fontWeight="600" color="var(--color-text-secondary)">MODEL</Text>
               <Text fontSize="14px" fontWeight="600" color="var(--color-text-secondary)">DESCRIPTION</Text>
@@ -489,6 +490,7 @@ const ProductCatalogTable = ({
               );
             })}
           </VStack>
+          </Box>
 
           {totalPages > 1 && (
             <HStack justify="space-between" px="16px">
