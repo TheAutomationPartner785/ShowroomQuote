@@ -42,21 +42,17 @@ export const useLeadsWithCache = (searchQuery = '') => {
       setError(null);
       abortRef.current = false;
 
-      // Layer 3: Check cache first
-      const cached = await getCache();
-      const isCacheValid = cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS;
-
-      if (isCacheValid) {
-        console.log('[useLeadsWithCache] Serving from cache (fresh < 1h, skipping refetch)');
-        allLoadedLeadsRef.current = cached.data;
-        setLeads(filterLeads(cached.data, searchQuery));
-        setTotalLoaded(cached.data.length);
-        setIsLoadingInitial(false);
-        // Caché válido dentro de la hora: no refetcheamos (ahorra requests)
-      } else {
-        console.log('[useLeadsWithCache] Cache miss or expired, fetching fresh');
-        await fetchFreshData({ silentRefresh: false });
-      }
+      // --- CACHÉ DE 1 HORA DESACTIVADA (comentada) por pedido ---
+      // const cached = await getCache();
+      // const isCacheValid = cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS;
+      // if (isCacheValid) {
+      //   allLoadedLeadsRef.current = cached.data;
+      //   setLeads(filterLeads(cached.data, searchQuery));
+      //   setTotalLoaded(cached.data.length);
+      //   setIsLoadingInitial(false);
+      //   return;
+      // }
+      await fetchFreshData({ silentRefresh: false });
     } catch (err) {
       console.error('[useLeadsWithCache] Load failed:', err);
       setError('Failed to load leads');

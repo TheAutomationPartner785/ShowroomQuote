@@ -48,29 +48,23 @@ export const useProducts = () => {
       setError(null);
       abortRef.current = false;
 
-      // Check cache first
-      const cached = await getCache();
-      if (cached?.products && cached.products.length > 0) {
-        const age = cached.lastSync ? Date.now() - cached.lastSync : Infinity;
-        setAllProducts(cached.products);
-        setFilterMetadata(cached.filterMetadata || {});
-        setIsLoadingInitial(false);
-        setIsLoadingAll(false);
+      // --- CACHÉ DE 1 HORA DESACTIVADA (comentada) por pedido ---
+      // Para reactivarla, descomentar este bloque:
+      // const cached = await getCache();
+      // if (cached?.products && cached.products.length > 0) {
+      //   const age = cached.lastSync ? Date.now() - cached.lastSync : Infinity;
+      //   setAllProducts(cached.products);
+      //   setFilterMetadata(cached.filterMetadata || {});
+      //   setIsLoadingInitial(false);
+      //   setIsLoadingAll(false);
+      //   if (age < CACHE_TTL_MS) { return; }            // fresco < 1h: no refetch
+      //   setIsRevalidating(true);
+      //   fetchFreshData({ silentRefresh: true });
+      //   return;
+      // }
 
-        if (age < CACHE_TTL_MS) {
-          // Caché fresco (< 1h): servimos y NO revalidamos (ahorra requests)
-          console.log('[useProducts] Serving from cache (fresh < 1h, skipping refetch)');
-          return;
-        }
-
-        // Caché viejo (> 1h): servimos stale y revalidamos por detrás
-        console.log('[useProducts] Serving stale cache, triggering background refresh');
-        setIsRevalidating(true);
-        fetchFreshData({ silentRefresh: true });
-      } else {
-        console.log('[useProducts] Cache miss, fetching fresh');
-        await fetchFreshData({ silentRefresh: false });
-      }
+      // Siempre traemos fresco, pintando progresivamente.
+      await fetchFreshData({ silentRefresh: false });
     } catch (err) {
       console.error('[useProducts] Load failed:', err);
       setError('Failed to load products');
@@ -90,9 +84,10 @@ export const useProducts = () => {
       const columns = ['status', 'msrpCa', 'brand', 'productType', 'productFamily', 'productCategory', 'friendlyDescription', 'productDescription'];
       let allItems = [];
       let cursor = null;
+      let firstPage = true;
       const maxItems = 2000;
 
-      console.log('[useProducts] Fetching products with status filter...');
+      console.log('[useProducts] Fetching products (progressive paint)...');
 
       do {
         const result = await productsBoard.items()
@@ -113,15 +108,25 @@ export const useProducts = () => {
           status: item.status || null
         }));
 
-        // CRITICAL: Exclude discontinued products at fetch level before state/cache
+        // CRITICAL: Exclude discontinued products at fetch level
         const activeProducts = pageItems.filter(p => p.status !== 'Discontinued');
-
-        console.log(`[useProducts] Page raw: ${pageItems.length}, after Discontinued filter: ${activeProducts.length}, excluded: ${pageItems.length - activeProducts.length}`);
-
         allItems = allItems.concat(activeProducts);
         cursor = result.cursor;
 
-        console.log(`[useProducts] Page fetched: ${allItems.length} total`);
+        // PROGRESSIVE PAINT: mostramos lo que va llegando en cada página
+        const products = Array.from(new Map(allItems.map(p => [p.id, p])).values());
+        setAllProducts(products);
+        setFilterMetadata(extractFilterMetadata(products));
+
+        if (firstPage) {
+          // Apenas llega la 1ª página: catálogo + filtros + búsqueda usables.
+          // Seguimos cargando el resto por detrás (indicador "Syncing...").
+          setIsLoadingInitial(false);
+          setIsLoadingAll(false);
+          setIsRevalidating(true);
+          firstPage = false;
+          console.log(`[useProducts] First page painted: ${products.length} products (loading more in background)`);
+        }
 
         if (allItems.length >= maxItems) {
           console.warn('[useProducts] Reached max items cap (2000)');
@@ -131,23 +136,15 @@ export const useProducts = () => {
 
       if (abortRef.current) return;
 
-      // Deduplicate
-      const uniqueMap = new Map(allItems.map(p => [p.id, p]));
-      const products = Array.from(uniqueMap.values());
-
-      // Extract filter metadata
-      const metadata = extractFilterMetadata(products);
-
-      console.log(`[useProducts] Loaded ${products.length} products with filters`);
-
-      setAllProducts(products);
-      setFilterMetadata(metadata);
+      const finalCount = new Map(allItems.map(p => [p.id, p])).size;
+      console.log(`[useProducts] Full load complete: ${finalCount} products`);
       setIsLoadingInitial(false);
       setIsLoadingAll(false);
       setIsRevalidating(false);
 
-      // Cache the full dataset with timestamp (1-hour window controlled on read)
-      await setCache({ products, filterMetadata: metadata, lastSync: Date.now() });
+      // --- CACHÉ DESACTIVADA (comentada) por pedido ---
+      // const finalProducts = Array.from(new Map(allItems.map(p => [p.id, p])).values());
+      // await setCache({ products: finalProducts, filterMetadata: extractFilterMetadata(finalProducts), lastSync: Date.now() });
     } catch (err) {
       console.error('[useProducts] Fetch failed:', err);
       setError('Failed to load products');

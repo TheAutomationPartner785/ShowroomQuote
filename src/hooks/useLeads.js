@@ -113,20 +113,18 @@ export const useLeads = (searchQuery = '', dateFilter = '') => {
       try {
         setError(null);
 
-        // LAYER 1: Serve cache immediately if valid
-        const cached = await getCache();
-        const isCacheValid = cached?.data && (Date.now() - cached.timestamp < CACHE_TTL_MS);
+        // --- CACHÉ DE 1 HORA DESACTIVADA (comentada) por pedido ---
+        // Para reactivarla, descomentar:
+        // const cached = await getCache();
+        // const isCacheValid = cached?.data && (Date.now() - cached.timestamp < CACHE_TTL_MS);
+        // if (isCacheValid) {
+        //   setAllLeads(cached.data);
+        //   setCurrentPage(1);
+        //   setLoading(false);
+        //   return;
+        // }
 
-        if (isCacheValid) {
-          console.log(`[useLeads] Serving ${cached.data.length} items from cache (fresh < 1h, skipping refetch)`);
-          setAllLeads(cached.data);
-          setCurrentPage(1);
-          setLoading(false);
-          // Caché válido dentro de la ventana de 1 hora: NO refetcheamos (ahorra requests)
-          return;
-        }
-
-        // LAYER 2: Fetch fresh data in background
+        // Traemos fresco SIEMPRE, pintando progresivamente página por página.
         setIsLoadingMore(true);
         const columns = ['email', 'zipCode', 'referOutDealer', 'comments', 'quotedDate', 'showroomVisitDate'];
 
@@ -174,7 +172,7 @@ export const useLeads = (searchQuery = '', dateFilter = '') => {
 
         // Save final result to cache
         const final = dedupeAndSort(accumulated);
-        await saveCache(final);
+        // await saveCache(final); // caché desactivada (comentada)
         setIsLoadingMore(false);
         console.log(`[useLeads] Background load complete: ${final.length} items`);
       } catch (err) {
